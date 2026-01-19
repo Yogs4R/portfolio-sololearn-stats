@@ -1,0 +1,253 @@
+{
+  "name": "portfolio-sololearn-stats",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "036aa3ca-7d54-4d2d-8335-cb8ebc2c60cc",
+      "name": "On App Start / Manual"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "98a6c20f-b2a5-4b75-8ddf-f7b3ad8a65e1",
+      "name": "Every 1 hour"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil data JSON dari node HTTP Request\nconst data = $input.first().json;\n\n// 1. Ambil XP dan Level\n// Kita gunakan \"|| 0\" untuk berjaga-jaga jika datanya null/kosong\nconst xp = data.userDetails.xp || 0;\nconst level = data.userDetails.level || 0;\n\n// 2. Hitung Jumlah Sertifikat\n// Cek apakah 'certificates' ada isinya dan berupa Array\nlet certCount = 0;\nif (data.certificates && Array.isArray(data.certificates)) {\n  certCount = data.certificates.length;\n}\n\nreturn {\n  json: {\n    platform: \"sololearn\",\n    stats: {\n      xp: xp,\n      level: level,\n      certificates: certCount, // Akan otomatis jadi angka (misal: 15)\n      last_fetched: new Date().toISOString()\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -96
+      ],
+      "id": "afab5355-9846-41c7-bc4c-6a7f9dce643a",
+      "name": "Calculate"
+    },
+    {
+      "parameters": {
+        "url": "https://api2.sololearn.com/v2/userinfo/v3/profile/34686483",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "sections",
+              "value": "1,3,7,8"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json, text/plain, */*"
+            },
+            {
+              "name": "accept-language",
+              "value": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7,ar;q=0.6"
+            },
+            {
+              "name": "authorization",
+              "value": "Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiJ7XCJJbnN0YW5jZUlkXCI6NTY4NjYwMjcsXCJVc2VySWRcIjozNDY4NjQ4MyxcIk5pY2tuYW1lXCI6XCJSaWR3YW4gU3VyeWFudGFyYVwiLFwiRGV2aWNlSWRcIjoxMDIyNjI2ODAsXCJDbGllbnRJZFwiOjExNDMsXCJQbGF0Zm9ybUlkXCI6NCxcIkxvY2FsZUlkXCI6MSxcIkFwcFZlcnNpb25cIjpcIjAuMC4wLjBcIixcIklzUHJvXCI6ZmFsc2UsXCJQbGFuQ29uZmlndXJhdGlvbklkXCI6MSxcIkNvbnRleHRJZFwiOjEsXCJPcmdhbml6YXRpb25JZFwiOjAsXCJHZW5lcmF0aW9uXCI6XCJiZGNmNzAyNS00YTNhLTQ4YWEtYWI3OC05NjViYTQ3NWE5YzRcIixcIkNvdW50cnlDb2RlXCI6XCJJRFwifSIsImp0aSI6IjZlZGRlZWEzLTRkZjMtNDEzNC04NWNkLWI1YjhhOTgxNjA3YiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE3Njg0MDU5MjcsImV4cCI6MTc2ODQwOTUyNywiaXNzIjoiU29sb0xlYXJuLlNlY3VyaXR5LkJlYXJlciIsImF1ZCI6IlNvbG9MZWFybi5TZWN1cml0eS5CZWFyZXIifQ.7tNx5slGIcT-vtMm8iGd2kSCJJfQ_XrBMd9sl_KA2oCVrvVQKBLzPIAX2mz3qRrEYEE9th9QjZ72ZOZGgXGNqA"
+            },
+            {
+              "name": "origin",
+              "value": "https://www.sololearn.com"
+            },
+            {
+              "name": "priority",
+              "value": "u=1, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://www.sololearn.com/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Windows\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "empty"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-site"
+            },
+            {
+              "name": "sl-locale",
+              "value": "en"
+            },
+            {
+              "name": "sl-plan-id"
+            },
+            {
+              "name": "sl-time-zone",
+              "value": "+7"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "c9165f9c-e4b7-4605-a174-c62af1d53837",
+      "name": "Get Stats (cURL Import API)"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "platform_stats",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "platform",
+              "condition": "eq",
+              "keyValue": "={{ $json.platform }}"
+            }
+          ]
+        },
+        "dataToSend": "autoMapInputData"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -96
+      ],
+      "id": "f4c1f08e-d1fb-45dd-bdd2-ec6c6ef8efa2",
+      "name": "Update a row Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "h4k5YA7fYcsjF35W",
+          "name": "Supabase Portfolio Stats"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 1 hour": {
+      "main": [
+        [
+          {
+            "node": "Get Stats (cURL Import API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On App Start / Manual": {
+      "main": [
+        [
+          {
+            "node": "Get Stats (cURL Import API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stats (cURL Import API)": {
+      "main": [
+        [
+          {
+            "node": "Calculate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate": {
+      "main": [
+        [
+          {
+            "node": "Update a row Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "acfaff9b-e640-459a-824d-ead49e213b99",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "37c66f27f19a42458ede6336939db7c94b24476e9651972bcb9c0725fbba68b2"
+  },
+  "id": "WDsp_TVF4CTguU4aSHm58",
+  "tags": [
+    {
+      "updatedAt": "2026-01-14T05:14:17.060Z",
+      "createdAt": "2026-01-14T05:14:17.060Z",
+      "id": "Cjf6WX8ozlEOLcQo",
+      "name": "stats"
+    },
+    {
+      "updatedAt": "2026-01-14T15:59:51.853Z",
+      "createdAt": "2026-01-14T15:59:51.853Z",
+      "id": "GDOQyaVKWROLgEyt",
+      "name": "sololearn"
+    },
+    {
+      "updatedAt": "2026-01-07T04:58:37.869Z",
+      "createdAt": "2026-01-07T04:58:37.869Z",
+      "id": "W13SvI2LXyZ0LcHa",
+      "name": "n8n"
+    },
+    {
+      "updatedAt": "2026-01-14T05:14:12.090Z",
+      "createdAt": "2026-01-14T05:14:12.090Z",
+      "id": "mncJN18udUw8cVGA",
+      "name": "portfolio"
+    }
+  ]
+}
